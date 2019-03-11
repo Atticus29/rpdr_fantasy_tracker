@@ -35,15 +35,15 @@ calculateNewScores = function(currentData, currentScores, tops, bottoms){
 require(data.table)
 require(stringr)
 require(RColorBrewer)
-baseDir = "/Users/mf/Desktop/"
-fileName = "s11_responses.csv"
-revisedFileName = sub('\\.csv','', fileName)
-data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+baseDir = "/Users/mf/Desktop/rpdr_fantasy_score_tracker/"
 darkcols <- brewer.pal(nrow(data), "Paired")
 
 ##########
 ##Week 1##
 ##########
+fileName = "s11_responses.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
 
 currentData = data
 currentScores = c(rep(0,nrow(currentData)))
@@ -52,4 +52,23 @@ bottoms = c("Soju", "Kahanna Montrese")
 wk1Scores = calculateNewScores(currentData, currentScores, tops, bottoms)
 
 x = barplot(newScores,ylab="Score",xaxt="n", las=2, col=darkcols)
+text(cex=1, x=x, y=-0.8, currentData[,2], xpd=TRUE, srt=90)
+
+##########
+##Week 2##
+##########
+
+fileName = "s11_responses_soju_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData))) #wk1Scores
+tops = c("Yvie Oddly","Scarlet Envy", "Plastique Tiara", "Shuga Cain")
+#topsAlt = c("Scarlet Envy","Yvie Oddly", "Plastique Tiara", "Shuga Cain")
+bottoms = c("Kahanna Montrese", "Mercedes Iman Diamond")
+#wk2Scoresalt = calculateNewScores(currentData, currentScores, topsAlt, bottoms)
+wk2Scores = calculateNewScores(currentData, currentScores, tops, bottoms)
+
+x = barplot(wk1Scores+wk2Scores,ylab="Score",xaxt="n", las=2, col=darkcols)
 text(cex=1, x=x, y=-0.8, currentData[,2], xpd=TRUE, srt=90)
