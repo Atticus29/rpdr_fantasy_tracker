@@ -1,4 +1,4 @@
-calculateNewScores = function(currentData, currentScores, tops, bottoms){
+calculateNewScores = function(currentData, currentScores, tops, bottoms, isThereATie=FALSE, howManyPeopleTied=1){
   
   ##Award points for loser
   predictedLosers = currentData[,ncol(currentData)]
@@ -6,7 +6,18 @@ calculateNewScores = function(currentData, currentScores, tops, bottoms){
   
   ##Award points for winner
   predictedEpisodeWinners = currentData[,3]
-  currentScores [which(predictedEpisodeWinners == tops[1])] = currentScores [which(predictedEpisodeWinners == tops[1])] + 2
+  if(isThereATie==TRUE){
+    tracker = c(rep(0,nrow(currentData)))
+    for(i in 1:howManyPeopleTied){
+      for(j in 3:(3+howManyPeopleTied-1)){
+        which(tops[i] ==  currentData[,j])
+        tracker[which(tops[i] ==  currentData[,j])] = tracker[which(tops[i] ==  currentData[,j])]+1
+      }
+    }
+    currentScores [which(tracker >=1)] = currentScores [which(tracker >=1)] + 2
+  }else{
+    currentScores [which(predictedEpisodeWinners == tops[1])] = currentScores [which(predictedEpisodeWinners == tops[1])] + 2  
+  }
   
   ##Now look for predicted losers in the bottom two but not the eliminated queen
   currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] = currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] + 1
@@ -36,7 +47,7 @@ require(data.table)
 require(stringr)
 require(RColorBrewer)
 baseDir = "/Users/mf/Desktop/rpdr_fantasy_score_tracker/"
-darkcols <- brewer.pal(nrow(data), "Paired")
+
 
 ##########
 ##Week 1##
@@ -50,9 +61,11 @@ currentScores = c(rep(0,nrow(currentData)))
 tops = c("Brooke Lynn Hytes", "A'keria Chanel Davenport", "Plastique Tiara", "Vanessa Vanjie Mateo")
 bottoms = c("Soju", "Kahanna Montrese")
 wk1Scores = calculateNewScores(currentData, currentScores, tops, bottoms)
+wk1Scores = c(wk1Scores, 2.75) #Jimi gets average for late join
 
+darkcols <- brewer.pal(nrow(data), "Paired")
 x = barplot(newScores,ylab="Score",xaxt="n", las=2, col=darkcols)
-text(cex=1, x=x, y=-0.8, currentData[,2], xpd=TRUE, srt=90)
+text(cex=1, x=x, y=-0.8, c(currentData[,2],"Jimi"), xpd=TRUE, srt=90)
 
 ##########
 ##Week 2##
@@ -65,10 +78,17 @@ data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFa
 currentData = data
 currentScores = c(rep(0,nrow(currentData))) #wk1Scores
 tops = c("Yvie Oddly","Scarlet Envy", "Plastique Tiara", "Shuga Cain")
+isThereATie = TRUE
+howManyPeopleTied =2
 #topsAlt = c("Scarlet Envy","Yvie Oddly", "Plastique Tiara", "Shuga Cain")
 bottoms = c("Kahanna Montrese", "Mercedes Iman Diamond")
 #wk2Scoresalt = calculateNewScores(currentData, currentScores, topsAlt, bottoms)
-wk2Scores = calculateNewScores(currentData, currentScores, tops, bottoms)
+wk2Scores = calculateNewScores(currentData, currentScores, tops, bottoms, TRUE, 2)
+wk2Scores = c(wk2Scores,1.583333)
 
-x = barplot(wk1Scores+wk2Scores,ylab="Score",xaxt="n", las=2, col=darkcols)
-text(cex=1, x=x, y=-0.8, currentData[,2], xpd=TRUE, srt=90)
+darkcols <- brewer.pal(nrow(data)*2, "Paired")
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
+text(cex=1, x=x, y=-1.3, c(currentData[,2],"Jimi"), xpd=TRUE, srt=90)
