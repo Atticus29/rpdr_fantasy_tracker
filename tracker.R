@@ -52,7 +52,7 @@ baseDir = "/Users/mf/Desktop/rpdr_fantasy_score_tracker/"
 ##########
 ##Week 1##
 ##########
-fileName = "s11_responses.csv"
+fileName = "1_s11_responses.csv"
 revisedFileName = sub('\\.csv','', fileName)
 data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
 
@@ -71,7 +71,7 @@ text(cex=1, x=x, y=-0.8, c(currentData[,2],"Jimi"), xpd=TRUE, srt=90)
 ##Week 2##
 ##########
 
-fileName = "s11_responses_soju_removed.csv"
+fileName = "2_s11_responses_soju_removed.csv"
 revisedFileName = sub('\\.csv','', fileName)
 data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
 
@@ -92,3 +92,30 @@ scoreTable = rbind(wk1Scores, wk2Scores)
 colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
 text(cex=1, x=x, y=-1.3, c(currentData[,2],"Jimi"), xpd=TRUE, srt=90)
+
+
+##########
+##Week 3##
+##########
+
+fileName = "3_s11_responses_sojuKahanna_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData))) #wk1Scores
+tops = c("Nina West","Vanessa Vanjie Mateo", "Ariel Versace")
+isThereATie = FALSE
+howManyPeopleTied =1
+
+bottoms = c("Honey Davenport", "Shuga Cain", "A'keria Chanel Davenport", "Scarlet Envy", "Ra'jah O'Hara", "Plastique Tiara")
+
+wk3Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
+text(cex=1, x=x, y=-1.3, currentData[,2], xpd=TRUE, srt=90)
