@@ -1,3 +1,7 @@
+##Usage##
+# bottoms should start with the loser(s)
+# tops should start with the winnter(s)
+
 calculateNewScores = function(currentData, currentScores, tops, bottoms, isThereATie=FALSE, howManyPeopleTied=1){
   
   ##Award points for loser
@@ -119,3 +123,30 @@ scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores)
 colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
 text(cex=1, x=x, y=-1.3, currentData[,2], xpd=TRUE, srt=90)
+
+
+##########
+##Week 4##
+##########
+
+fileName = "4_s11_responses_sojuKahannaHoney_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData)))
+tops = c("Silky Nutmeg Ganache","Brooke Lynn Hytes", "Yvie Oddly")
+isThereATie = FALSE
+howManyPeopleTied =1
+
+bottoms = c("Mercedes Iman Diamond", "Ra'jah O'Hara", "Vanessa Vanjie Mateo")
+
+wk4Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
+text(cex=1, x=x, y=-1.5, currentData[,2], xpd=TRUE, srt=90)
