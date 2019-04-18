@@ -204,3 +204,30 @@ scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores)
 colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols)
 text(cex=1, x=x, y=-1.7, currentData[,2], xpd=TRUE, srt=90)
+
+
+##########
+##Week 7##
+##########
+
+fileName = "7_s11_responses_sojuKahannaHoneyMercedesArielScarlet_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData)))
+tops = c("Plastique Tiara","Brooke Lynn Hytes", "Yvie Oddly")
+isThereATie = FALSE
+howManyPeopleTied =1
+
+bottoms = c("Ra'jah O'Hara", "A'keria Chanel Davenport", "Nina West")
+
+wk6Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,20))
+text(cex=1, x=x, y=-2.2, currentData[,2], xpd=TRUE, srt=90)
