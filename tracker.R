@@ -279,6 +279,34 @@ colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,30))
 text(cex=1, x=x, y=-3.2, currentData[,2], xpd=TRUE, srt=90)
 
+
+##########
+##Week 9##
+##########
+
+fileName = "9_s11_responses_sojuKahannaHoneyMercedesArielScarletRajah_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData)))
+tops = c("A'keria Chanel Davenport", "Brooke Lynn Hytes", "Silky Nutmeg Ganache")
+isThereATie = FALSE
+isThereADoubleSave = FALSE
+howManyPeopleTied =1
+
+bottoms = c("Plastique Tiara", "Vanessa Vanjie Mateo", "Shuga Cain")
+
+wk9Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied, isThereADoubleSave)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores,wk9Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,35))
+text(cex=1, x=x, y=-3.7, currentData[,2], xpd=TRUE, srt=90)
+
 ##Dynamic Plots##
 # library(tidyverse)
 # library(janitor)
