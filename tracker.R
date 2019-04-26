@@ -2,11 +2,19 @@
 # bottoms should start with the loser(s)
 # tops should start with the winnter(s)
 
-calculateNewScores = function(currentData, currentScores, tops, bottoms, isThereATie=FALSE, howManyPeopleTied=1){
+calculateNewScores = function(currentData, currentScores, tops, bottoms, isThereATie=FALSE, howManyPeopleTied=1, isThereADoubleSave = FALSE){
   
-  ##Award points for loser
-  predictedLosers = currentData[,ncol(currentData)]
-  currentScores [which(predictedLosers == bottoms[1])] = currentScores [which(predictedLosers == bottoms[1])] + 3
+  if(isThereADoubleSave==TRUE){
+    #only award one point for the bottom person being in the bottom but not getting eliminated
+    predictedLosers = currentData[,ncol(currentData)]
+    currentScores [which(predictedLosers == bottoms[1])] = currentScores [which(predictedLosers == bottoms[1])] + 1
+  } else{
+    ##Award full points for loser
+    predictedLosers = currentData[,ncol(currentData)]
+    currentScores [which(predictedLosers == bottoms[1])] = currentScores [which(predictedLosers == bottoms[1])] + 3  
+  }
+  
+  
   
   ##Award points for winner
   predictedEpisodeWinners = currentData[,3]
@@ -24,13 +32,24 @@ calculateNewScores = function(currentData, currentScores, tops, bottoms, isThere
   }
   
   ##Now look for predicted losers in the bottom two but not the eliminated queen
-  currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] = currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] + 1
+  if(isThereADoubleSave==TRUE){
+    #Use the true bottom 2 (including both non-eliminated queens) to award points
+    currentScores [which(predictedLosers %in% bottoms[1:length(bottoms)-1])] = currentScores [which(predictedLosers %in% bottoms[1:length(bottoms)-1])] + 1  
+    for(i in 2:length(bottoms)-1){
+      bottomCandidate = currentData[,ncol(currentData)-(i-1)]
+      currentScores [which(bottomCandidate %in% bottoms[1:length(bottoms)-1])] = currentScores [which(bottomCandidate %in% bottoms[1:length(bottoms)-1])] + 1
+    }
+  } else{
+    currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] = currentScores [which(predictedLosers %in% bottoms[2:length(bottoms)])] + 1  
+    for(i in 2:length(bottoms)){
+      bottomCandidate = currentData[,ncol(currentData)-(i-1)]
+      currentScores [which(bottomCandidate %in% bottoms)] = currentScores [which(bottomCandidate %in% bottoms)] + 1
+    }
+  }
+  
   #predictedLipSyncWinner = currentData[,ncol(currentData)-1]
   #currentScores [which(predictedLipSyncWinner %in% bottoms[1:length(bottoms)])] = currentScores [which(predictedLipSyncWinner %in% bottoms[2:length(bottoms)])] + 1
-  for(i in 2:length(bottoms)){
-    bottomCandidate = currentData[,ncol(currentData)-(i-1)]
-    currentScores [which(bottomCandidate %in% bottoms)] = currentScores [which(bottomCandidate %in% bottoms)] + 1
-  }
+  
   
   
   ##Now look for predicted winners in the top but not the winner
@@ -231,3 +250,36 @@ scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Sco
 colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,20))
 text(cex=1, x=x, y=-2.2, currentData[,2], xpd=TRUE, srt=90)
+
+##########
+##Week 8##
+##########
+
+fileName = "8_s11_responses_sojuKahannaHoneyMercedesArielScarletRajah_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData)))
+tops = c("Silky Nutmeg Ganache", "Shuga Cain", "Nina West")
+isThereATie = FALSE
+isThereADoubleSave = TRUE
+howManyPeopleTied =1
+
+bottoms = c("Brooke Lynn Hytes", "Yvie Oddly", "Vanessa Vanjie Mateo")
+
+wk8Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied, isThereADoubleSave)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,30))
+text(cex=1, x=x, y=-3.2, currentData[,2], xpd=TRUE, srt=90)
+
+##Dynamic Plots##
+# library(tidyverse)
+# library(janitor)
+# 
+# dynamicData <- read_csv(paste0(baseDir, fileName))
