@@ -1,6 +1,7 @@
 ##Usage##
 # bottoms should start with the loser(s)
 # tops should start with the winnter(s)
+# tables fed in should NOT contain blank columns with just titles anywhere!
 
 calculateNewScores = function(currentData, currentScores, tops, bottoms, isThereATie=FALSE, howManyPeopleTied=1, isThereADoubleSave = FALSE){
   
