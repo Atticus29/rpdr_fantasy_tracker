@@ -385,6 +385,7 @@ wk12Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThe
 colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
 darkcols <- colorRampFunction(nrow(data)*2)
 # table(wk1Scores,wk2Scores)
+# TODO apply sum by column scoreTotal = sum(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores, wk9Scores, wk10Scores,wk11Scores, wk12Scores)
 scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores, wk9Scores, wk10Scores, wk11Scores, wk12Scores)
 colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,50))
