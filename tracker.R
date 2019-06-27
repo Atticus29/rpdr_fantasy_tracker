@@ -391,6 +391,33 @@ colnames(scoreTable) = currentData[,2]
 x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,50))
 text(cex=1, x=x, y=-5.7, currentData[,2], xpd=TRUE, srt=90)
 
+######################
+##Week 13 and finale##
+######################
+
+fileName = "13_s11_responses_sojuKahannaHoneyMercedesArielScarletRajahPlastiqueShugahNinaVanjie_removed.csv"
+revisedFileName = sub('\\.csv','', fileName)
+data = read.csv(file = paste0(baseDir, fileName), header=T, sep=",", stringsAsFactors = FALSE)
+
+currentData = data
+currentScores = c(rep(0,nrow(currentData)))
+tops = c("Yvie Oddly")
+isThereATie = FALSE
+isThereADoubleSave = FALSE
+howManyPeopleTied =1
+
+bottoms = c("Brooke Lynn Hytes", "A'keria Chanel Davenport", "Silky Nutmeg Ganache")
+
+wk12Scores = calculateNewScores(currentData, currentScores, tops, bottoms, isThereATie, howManyPeopleTied, isThereADoubleSave)
+
+colorRampFunction = colorRampPalette(brewer.pal(12, "Paired"))
+darkcols <- colorRampFunction(nrow(data)*2)
+# table(wk1Scores,wk2Scores)
+# TODO apply sum by column scoreTotal = sum(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores, wk9Scores, wk10Scores,wk11Scores, wk12Scores)
+scoreTable = rbind(wk1Scores, wk2Scores, wk3Scores, wk4Scores, wk5Scores, wk6Scores, wk7Scores, wk8Scores, wk9Scores, wk10Scores, wk11Scores, wk12Scores)
+colnames(scoreTable) = currentData[,2]
+x = barplot(scoreTable,ylab="Score",xaxt="n", las=2, col=darkcols, ylim=c(0,50))
+text(cex=1, x=x, y=-5.7, currentData[,2], xpd=TRUE, srt=90)
 
 ##Dynamic Plots##
 # library(tidyverse)
